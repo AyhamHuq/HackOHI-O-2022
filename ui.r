@@ -18,7 +18,10 @@ body <- dashboardBody(
     tabItems(
       # Dashboard tab content
       tabItem(
-            tabName = "dashboard"
+            tabName = "dashboard",
+            box(
+                textOutput("tableTest")
+            )
         ),
       # Settings tab content
       tabItem(
@@ -37,13 +40,17 @@ body <- dashboardBody(
                 "EneryType",
                 label = "Choose the type of Energy:",
                 choices = list("steam" = 1, "elec" = 2)
+            ),
+            #Slider for the number of days
+            sliderInput(
+                "Slider", 
+                label = h3("# of Days to Compile"), 
+                min = 1, 
+                max = 31, 
+                value = 7
             )
-
-            
-        )
-    )
+      )
+    ) 
 )
-
-
 
 ui <- dashboardPage(header,sidebar, body, skin = "red")
