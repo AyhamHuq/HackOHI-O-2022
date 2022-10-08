@@ -34,12 +34,12 @@ body <- dashboardBody(
             selectInput(
                 "mydorm",
                 label = "Choose your dorm:",
-                choices = list("Busch House" = 1,"Taylor Tower" = 2,"Smith-Steebe" = 3,"Baker" = 4,"Morrill Tower" = 5)
+                choices = list("Busch House" = 2,"Taylor Tower" = 3,"Smith-Steebe" = 4,"Baker" = 5,"Morrill Tower" = 6)
             ),
             selectInput(
                 "EneryType",
                 label = "Choose the type of Energy:",
-                choices = list("steam" = 1, "elec" = 2)
+                choices = list("Steam Consumption" = 1, "Electricity Consumption" = 2, "Chilled Water Consumption" = 3, "Hot Water Consumption" = 4, "Total Energy Consumption" = 5, "Natural Gas Consumption" = 6)
             ),
             #Slider for the number of days
             sliderInput(
