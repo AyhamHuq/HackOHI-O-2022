@@ -15,7 +15,7 @@ server <- function(input, output, session) {
   })
 
   output$tableTest <- renderPrint({
-    sumTasList()
+    myOp()
   })
 
   averageOI <- reactive({
@@ -46,20 +46,40 @@ server <- function(input, output, session) {
   })
 
 #funFact <- function(kutb){
-
- 
-    
+#joules = kutb*1054852.3206751
+# 
+#
+#
+#
+#
+#
+#    
 #}
 
+myOp <- reactive({
+  find <- sumPerPerson()[(strtoi(input$mydorm)-1)]
+  for(i in 1:5){
+    if(find > (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[i] - .5) & find < (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[i] + .5)){
+        index <- i
+        
+    }
+  }
+  if(index == 1){
+      return (2)
+  }else{
+    return ((index-1))
+  }
+
+
+})
 
   vyomsfunction <- function(position) {
-    #you want to match the first value with a value in the
-    #array SumT. using the index of the matched value, you want
-    #to figure out the name of the dorm who is first
+    
     find <- sortedArrayOfAveragePerSumPerPersonsPerPeriod()[position]
     for(i in 1:5){
       if(find > (sumPerPerson()[i] - .5) & find < (sumPerPerson()[i] + .5)){
         nameIndex <- i+1
+        
       }
         if(nameIndex == 2){
           return ("Busch House")
@@ -122,7 +142,10 @@ server <- function(input, output, session) {
   catNames <- c("Steam Consumption", "Electricity Consumption" , "Chilled Water Consumption" , "Hot Water Consumption" , "Total Energy Consumption" , "Natural Gas Consumption" )
 
   output$comparer <- renderUI({
-    uiOutput("you")
+    fluidPage(
+      uiOutput("you"),
+      uiOutput("them")
+    )
   })
 
   output$you <- renderUI({
@@ -134,6 +157,15 @@ server <- function(input, output, session) {
     )
   })
 
+  output$them <- renderUI ({
+    box(
+      width = 6,
+      title = paste0(dormNames[strtoi(myOp())]),
+      valueBoxOutput("v3"),
+      valueBoxOutput("v4")
+    )
+  })
+
   output$v1 <- renderValueBox ({
     valueBox(round(sumPerPerson()[strtoi(input$mydorm)-1],digits = 0), paste(catNames[strtoi(input$EneryType)],"per person(kBTU)"),color ="red")
   })
@@ -141,11 +173,24 @@ server <- function(input, output, session) {
   output$v2 <- renderValueBox ({
     valueBox(round((averagePerPerson()[strtoi(input$mydorm)-1]*1000),digits = 0), "Your hourly consumption :( (BTU)",color ="red")
   })
+  output$v3 <- renderValueBox ({
+    valueBox(round(sumPerPerson()[strtoi(myOp())],digits = 0), paste(catNames[strtoi(input$EneryType)],"per person(kBTU)"),color ="red")
+  })
+
+  output$v4 <- renderValueBox ({
+    valueBox(round((averagePerPerson()[strtoi(myOp())]*1000),digits = 0), "Their hourly consumption :( (BTU)",color ="red")
+  })
 
   output$leaderboard <- renderUI({
     box(
       title = "Best Energy Savers",
-      h1(paste(vyomsfunction(1),sortedArrayOfAveragePerSumPerPersonsPerPeriod()[1]))
+      h1(paste(vyomsfunction(1)),round(sortedArrayOfAveragePerSumPerPersonsPerPeriod()[1],digits=0))
+    )
+  })
+  
+  output$factnocap <- renderUI ({
+    box(
+      h2(paste0("The difference between you and ",dormNames[strtoi(myOp())], " is",abs(-4)))
     )
   })
 }

@@ -19,9 +19,8 @@ body <- dashboardBody(
       # Dashboard tab content
       tabItem(
             tabName = "dashboard",
-            box(
-                textOutput("tableTest")
-            )
+            uiOutput("comparer"),
+            uiOutput("leaderboard")
         ),
       # Settings tab content
       tabItem(
