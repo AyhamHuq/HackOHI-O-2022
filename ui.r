@@ -18,9 +18,12 @@ body <- dashboardBody(
     tabItems(
       # Dashboard tab content
       tabItem(
+            uiOutput("datedisplay"),
             tabName = "dashboard",
             uiOutput("comparer"),
-            uiOutput("leaderboard")
+            uiOutput("leaderboard"),
+            uiOutput("factnocap")
+            
         ),
       # Settings tab content
       tabItem(
@@ -38,7 +41,7 @@ body <- dashboardBody(
             selectInput(
                 "EneryType",
                 label = "Choose the type of Energy:",
-                choices = list("Steam Consumption" = 1, "Electricity Consumption" = 2, "Chilled Water Consumption" = 3, "Hot Water Consumption" = 4, "Total Energy Consumption" = 5, "Natural Gas Consumption" = 6)
+                choices = list("Electricity Consumption" = 2,"Total Energy Consumption" = 5)
             ),
             #Slider for the number of days
             sliderInput(
