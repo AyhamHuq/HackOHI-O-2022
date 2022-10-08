@@ -45,31 +45,47 @@ server <- function(input, output, session) {
     return (sort(copyOfSumPerPersons))
   })
 
-#funFact <- function(kutb){
-#joules = kutb*1054852.3206751
-# 
-#
-#
-#
-#
-#
-#    
-#}
+funFact <- function(kutb){
+joules <- (kutb*1054852.3206751)
+seconds <- joules/10
+days <- seconds/86400
+
+return (paste("That is equivalent to running a toothbrush for ", days, "."))
+
+ 
+
+
+
+
+  
+}
 
 myOp <- reactive({
   find <- sumPerPerson()[(strtoi(input$mydorm)-1)]
   for(i in 1:5){
-    if(find > (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[i] - .5) & find < (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[i] + .5)){
+    if(find > (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[i] - .2) & find < (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[i] + .2)){
         index <- i
-        
     }
   }
+  
   if(index == 1){
-      return (2)
+      house <- vyomsfunction(index+1)
   }else{
-    return ((index-1))
+        house <- vyomsfunction(index-1)
   }
-
+if(house == "Busch House"){
+    return (1)
+}else if(house == "Taylor Tower"){
+    return (2)
+}
+else if(house == "Smith-Steebe"){
+    return (3)
+}
+else if(house == "Baker"){
+    return (4)
+}else if(house == "Morill Tower"){
+    return (5)
+}
 
 })
 
@@ -77,11 +93,14 @@ myOp <- reactive({
     
     find <- sortedArrayOfAveragePerSumPerPersonsPerPeriod()[position]
     for(i in 1:5){
-      if(find > (sumPerPerson()[i] - .5) & find < (sumPerPerson()[i] + .5)){
+      if(find > (sumPerPerson()[i] - .2) & find < (sumPerPerson()[i] + .2)){
         nameIndex <- i+1
         
       }
-        if(nameIndex == 2){
+
+        
+    }
+    if(nameIndex == 2){
           return ("Busch House")
         }else if(nameIndex ==3){
           return ("Taylor Tower")
@@ -92,7 +111,6 @@ myOp <- reactive({
         }else if(nameIndex == 6){
           return ("Morill Tower")
         }
-    }
   }
 
   sumT <- reactive ({
@@ -142,7 +160,7 @@ myOp <- reactive({
   catNames <- c("Steam Consumption", "Electricity Consumption" , "Chilled Water Consumption" , "Hot Water Consumption" , "Total Energy Consumption" , "Natural Gas Consumption" )
 
   output$comparer <- renderUI({
-    fluidPage(
+    fluidRow(
       uiOutput("you"),
       uiOutput("them")
     )
@@ -152,45 +170,76 @@ myOp <- reactive({
     box(
       width = 6,
       title = paste0(dormNames[strtoi(input$mydorm)-1]),
-      valueBoxOutput("v1"),
-      valueBoxOutput("v2")
+      fluidRow(valueBoxOutput("v1"),valueBoxOutput("v2"))
     )
+  })
+
+  output$plottt <-  renderPlot ({
+    pie(round(sumPerPerson()[strtoi(input$mydorm)-1],digits = 0),round(sumPerPerson()[strtoi(myOp())],digits = 0))
   })
 
   output$them <- renderUI ({
     box(
       width = 6,
       title = paste0(dormNames[strtoi(myOp())]),
-      valueBoxOutput("v3"),
-      valueBoxOutput("v4")
+      fluidRow(valueBoxOutput("v3"),valueBoxOutput("v4"))
     )
   })
 
   output$v1 <- renderValueBox ({
-    valueBox(round(sumPerPerson()[strtoi(input$mydorm)-1],digits = 0), paste(catNames[strtoi(input$EneryType)],"per person(kBTU)"),color ="red")
+    colorOfBox <- "red"
+    if (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[2] > sumPerPerson()[strtoi(input$mydorm)-1]){
+      colorOfBox <- "green"
+    } 
+    valueBox(round(sumPerPerson()[strtoi(input$mydorm)-1],digits = 0), paste(catNames[strtoi(input$EneryType)],"per person(kBTU)"),color = colorOfBox)
   })
 
   output$v2 <- renderValueBox ({
-    valueBox(round((averagePerPerson()[strtoi(input$mydorm)-1]*1000),digits = 0), "Your hourly consumption :( (BTU)",color ="red")
+    colorOfBox <- "red"
+    if (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[2] > sumPerPerson()[strtoi(input$mydorm)-1]){
+      colorOfBox <- "green"
+    } 
+    valueBox(round((averagePerPerson()[strtoi(input$mydorm)-1]*1000),digits = 0), "Your hourly consumption (BTU)",color =colorOfBox)
   })
   output$v3 <- renderValueBox ({
-    valueBox(round(sumPerPerson()[strtoi(myOp())],digits = 0), paste(catNames[strtoi(input$EneryType)],"per person(kBTU)"),color ="red")
+    colorOfBox <- "green"
+    if (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[2] > sumPerPerson()[strtoi(input$mydorm)-1]){
+      colorOfBox <- "red"
+    } 
+    valueBox(round(sumPerPerson()[strtoi(myOp())],digits = 0), paste(catNames[strtoi(input$EneryType)],"per person(kBTU)"),color =colorOfBox)
   })
 
   output$v4 <- renderValueBox ({
-    valueBox(round((averagePerPerson()[strtoi(myOp())]*1000),digits = 0), "Their hourly consumption :( (BTU)",color ="red")
+    colorOfBox <- "green"
+    if (sortedArrayOfAveragePerSumPerPersonsPerPeriod()[2] > sumPerPerson()[strtoi(input$mydorm)-1]){
+      colorOfBox <- "red"
+    } 
+    valueBox(round((averagePerPerson()[strtoi(myOp())]*1000),digits = 0), "Their hourly consumption (BTU)",color =colorOfBox)
   })
 
   output$leaderboard <- renderUI({
     box(
       title = "Best Energy Savers",
-      h1(paste(vyomsfunction(1)),round(sortedArrayOfAveragePerSumPerPersonsPerPeriod()[1],digits=0))
+      h3(paste("1.) ",vyomsfunction(1),":",round(sortedArrayOfAveragePerSumPerPersonsPerPeriod()[1],digits=0)," kBTU per person")),
+      h3(paste("2.) ",vyomsfunction(2),":",round(sortedArrayOfAveragePerSumPerPersonsPerPeriod()[2],digits=0)," kBTU per person")),
+      h3(paste("3.) ",vyomsfunction(3),":",round(sortedArrayOfAveragePerSumPerPersonsPerPeriod()[3],digits=0)," kBTU per person")),
+      h3(paste("4.) ",vyomsfunction(4),":",round(sortedArrayOfAveragePerSumPerPersonsPerPeriod()[4],digits=0)," kBTU per person")),
+      h3(paste("5.) ",vyomsfunction(5),":",round(sortedArrayOfAveragePerSumPerPersonsPerPeriod()[5],digits=0)," kBTU per person"))
     )
   })
   
   output$factnocap <- renderUI ({
     box(
-      h2(paste0("The difference between you and ",dormNames[strtoi(myOp())], " is",abs(-4)))
+      h2(paste0("The difference between you and ",dormNames[strtoi(myOp())], " is ",abs(round(sumPerPerson()[strtoi(myOp())],digits = 0)-round(sumPerPerson()[strtoi(input$mydorm)-1],digits = 0))," kBTU. "))
     )
   })
+
+  output$datedisplay <- renderUI ({
+    box(
+      width = 12,
+      h1(paste("Energy Data from ", recentData()[1,1]," to ",recentData()[nrow(recentData()),1]))
+    )
+  })
+
 }
+
