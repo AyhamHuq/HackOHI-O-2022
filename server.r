@@ -3,6 +3,7 @@ library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
 
+
 server <- function(input, output, session) {
 
   #uses file path to return a table of all the values
@@ -53,6 +54,8 @@ server <- function(input, output, session) {
     }
     return(v)
   })
+
+  ##sortedArrayOfAveragePerSumPerPersonsPerPeriod
 
   sortedArrayOfAveragePerSumPerPersonsPerPeriod <- reactive ({
     copyOfSumPerPersons <- sumPerPerson()
@@ -183,7 +186,7 @@ else if(house == "Baker"){
   })
 
   output$plottt <-  renderPlot ({
-    plot(x(),y(),type = "l")
+    plot(Time (In Hours),Energy Used (Kbut),type = "l")
   })
 
   output$them <- renderUI ({
