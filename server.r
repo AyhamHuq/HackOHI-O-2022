@@ -27,6 +27,21 @@ server <- function(input, output, session) {
     return(mean(recentData()[,i]))
   })
 
+  y <- reactive ({
+    c <- 6
+    d <- 5
+    dorm <- strtoi(input$mydorm)
+    category <- strtoi(input$EneryType)
+    i <- dorm + (d-dorm+1) + (dorm-1-1)*c+category
+    return(recentData()[,i])
+  })
+
+  x <- reactive ({
+    h <- 24*(input$Slider)
+    v = 1:h
+    return(v)
+  })
+
   averagePerPerson <- reactive ({
     return(sumT()/sumP())
   })
@@ -40,6 +55,8 @@ server <- function(input, output, session) {
     return(v)
   })
 
+  ##sortedArrayOfAveragePerSumPerPersonsPerPeriod
+
   sortedArrayOfAveragePerSumPerPersonsPerPeriod <- reactive ({
     copyOfSumPerPersons <- sumPerPerson()
     return (sort(copyOfSumPerPersons))
@@ -50,14 +67,8 @@ joules <- (kutb*1054852.3206751)
 seconds <- joules/10
 days <- seconds/86400
 
-return (paste("That is equivalent to running a toothbrush for ", days, "."))
+return (paste("That is equivalent to running a toothbrush for ", round(days, 0), " days."))
 
- 
-
-
-
-
-  
 }
 
 myOp <- reactive({
@@ -175,7 +186,7 @@ else if(house == "Baker"){
   })
 
   output$plottt <-  renderPlot ({
-    pie(round(sumPerPerson()[strtoi(input$mydorm)-1],digits = 0),round(sumPerPerson()[strtoi(myOp())],digits = 0))
+    plot(Time (In Hours),Energy Used (Kbut),type = "l")
   })
 
   output$them <- renderUI ({
@@ -230,7 +241,7 @@ else if(house == "Baker"){
   
   output$factnocap <- renderUI ({
     box(
-      h2(paste0("The difference between you and ",dormNames[strtoi(myOp())], " is ",abs(round(sumPerPerson()[strtoi(myOp())],digits = 0)-round(sumPerPerson()[strtoi(input$mydorm)-1],digits = 0))," kBTU. "))
+      h2(paste0("The difference between you and ",dormNames[strtoi(myOp())], " is ",abs(round(sumPerPerson()[strtoi(myOp())],digits = 0)-round(sumPerPerson()[strtoi(input$mydorm)-1],digits = 0))," kBTU. ",funFact(round(abs(round(sumPerPerson()[strtoi(myOp())],digits = 0)-round(sumPerPerson()[strtoi(input$mydorm)-1],digits = 0)),digits=0))))
     )
   })
 
@@ -238,6 +249,13 @@ else if(house == "Baker"){
     box(
       width = 12,
       h1(paste("Energy Data from ", recentData()[1,1]," to ",recentData()[nrow(recentData()),1]))
+    )
+  })
+
+  output$plotout <- renderUI({
+    box(
+      title = "Energy Usage Based on Hours",
+      plotOutput("plottt")
     )
   })
 

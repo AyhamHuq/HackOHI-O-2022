@@ -3,6 +3,8 @@ library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
 
+
+
 header <- dashboardHeader(
     title = "Energy!!!!!!!"
 )
@@ -10,7 +12,8 @@ header <- dashboardHeader(
 sidebar <- dashboardSidebar(
     sidebarMenu(
       menuItem("Display", tabName = "dashboard", icon = icon("dashboard")),
-      menuItem("Settings", tabName = "settings", icon = icon("cog"))
+      menuItem("Settings", tabName = "settings", icon = icon("cog")),
+      menuItem("Other",tabName = "other")
     )
   )
 
@@ -22,7 +25,8 @@ body <- dashboardBody(
             tabName = "dashboard",
             uiOutput("comparer"),
             uiOutput("leaderboard"),
-            uiOutput("factnocap")
+            uiOutput("factnocap"),
+            uiOutput("plotout")
             
         ),
       # Settings tab content
@@ -51,7 +55,10 @@ body <- dashboardBody(
                 max = 31, 
                 value = 7
             )
-      )
+        ),
+        tabItem(
+            tabName = "other"
+        )
     ) 
 )
 
