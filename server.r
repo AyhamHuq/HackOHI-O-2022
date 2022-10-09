@@ -186,7 +186,7 @@ else if(house == "Baker"){
   })
 
   output$plottt <-  renderPlot ({
-    plot(Time (In Hours),Energy Used (Kbut),type = "l")
+    plot(x(),y(),type = "l")
   })
 
   output$them <- renderUI ({
