@@ -3,7 +3,6 @@ library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
 
-
 server <- function(input, output, session) {
 
   #uses file path to return a table of all the values
